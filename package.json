@@ -1,0 +1,26 @@
+{
+  "name": "blog-api-backend",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=20.11.1"
+  },
+  "description": "Backend for the Blog API project",
+  "main": "app.js",
+  "private": "true",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "dziubenzo",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.18.0",
+    "mongoose": "^8.2.2",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  }
+}

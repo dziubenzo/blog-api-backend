@@ -1,1 +1,1 @@
-# blog-api-backend
+# Odin Project - Blog API (Backend)

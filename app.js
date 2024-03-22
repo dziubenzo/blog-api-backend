@@ -37,6 +37,14 @@ app.use('/', indexRouter);
 app.use('/users', userRouter);
 app.use('/posts', postRouter);
 
+// Error handler
+app.use((err, req, res, next) => {
+  res.status(500).json({
+    error: 'An error has occurred.',
+    errorDetails: err,
+  });
+});
+
 // Server listener
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on port ${process.env.PORT}...`);

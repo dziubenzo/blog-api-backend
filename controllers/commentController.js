@@ -2,6 +2,7 @@ const Comment = require('../models/Comment');
 
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
+const getErrorMessages = require('../config/helpers').getErrorMessages;
 
 exports.get_all_comments = asyncHandler(async (req, res, next) => {
   const postID = req.params.id;
@@ -58,9 +59,10 @@ exports.create_comment = [
       avatar_colour: avatarColour,
     });
 
-    // Return error(s) if something is wrong
+    // Return error message(s) if something is wrong
     if (!errors.isEmpty()) {
-      return res.status(400).json(errors.array());
+      const errorMsgs = getErrorMessages(errors);
+      return res.status(400).json(errorMsgs);
     } else {
       // Save comment and return success message
       await comment.save();

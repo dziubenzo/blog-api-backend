@@ -4,6 +4,7 @@ const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 const slugify = require('slugify');
+const getErrorMessages = require('../config/helpers').getErrorMessages;
 const checkIdParameter = require('../config/middleware').checkIdParameter;
 
 exports.get_all_posts = asyncHandler(async (req, res, next) => {
@@ -58,9 +59,10 @@ exports.create_post = [
       slug: slugify(title, { lower: true }),
     });
 
-    // Return error(s) if something is wrong
+    // Return error message(s) if something is wrong
     if (!errors.isEmpty()) {
-      return res.status(400).json(errors.array());
+      const errorMsgs = getErrorMessages(errors);
+      return res.status(400).json(errorMsgs);
     } else {
       // Check if the post with the same title already exists
       const postExists = await Post.findOne({ title: title }).exec();
@@ -178,9 +180,10 @@ exports.edit_post = [
       slug: slugify(title, { lower: true }),
     };
 
-    // Return error(s) if something is wrong
+    // Return error message(s) if something is wrong
     if (!errors.isEmpty()) {
-      return res.status(400).json(errors.array());
+      const errorMsgs = getErrorMessages(errors);
+      return res.status(400).json(errorMsgs);
     } else {
       // Update post and return success message
       await Post.findByIdAndUpdate(postId, editedPost);

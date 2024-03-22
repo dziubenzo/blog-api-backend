@@ -2,8 +2,15 @@ const express = require('express');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 
+// Authentication imports
 const session = require('express-session');
 const passport = require('passport');
+
+// Route imports
+const indexRouter = require('./routes/index');
+const postRouter = require('./routes/post');
+const commentRouter = require('./routes/comment');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -25,9 +32,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.json({ msg: 'Blog API by dziubenzo' });
-});
+// Routes
+app.use('/', indexRouter);
+app.use('/users', userRouter);
 
 // Server listener
 app.listen(process.env.PORT, () => {

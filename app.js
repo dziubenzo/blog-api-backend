@@ -39,9 +39,9 @@ app.use('/posts', postRouter);
 
 // Error handler
 app.use((err, req, res, next) => {
-  res.status(500).json({
+  return res.status(500).json({
     error: 'An error has occurred.',
-    errorDetails: err,
+    message: `ERROR: ${err.message}`,
   });
 });
 

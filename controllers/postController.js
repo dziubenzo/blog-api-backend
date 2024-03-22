@@ -89,12 +89,30 @@ exports.publish_all_posts = asyncHandler(async (req, res, next) => {
   // Return error message if no documents were updated
   if (result.modifiedCount === 0) {
     return res.status(400).json({
-      error: 'Found no documents to update.',
+      error: 'No documents to update.',
     });
   }
   // Return success message otherwise
   return res.json({
-    message: `${result.modifiedCount} was/were published successfully.`,
+    message: `Documents published successfully. Count: ${result.modifiedCount}.`,
+  });
+});
+
+exports.unpublish_all_posts = asyncHandler(async (req, res, next) => {
+  // Update all published posts to unpublished
+  const result = await Post.updateMany(
+    { published: true },
+    { published: false }
+  );
+  // Return error message if no documents were updated
+  if (result.modifiedCount === 0) {
+    return res.status(400).json({
+      error: 'No documents to update.',
+    });
+  }
+  // Return success message otherwise
+  return res.json({
+    message: `Documents unpublished successfully. Count: ${result.modifiedCount}.`,
   });
 });
 

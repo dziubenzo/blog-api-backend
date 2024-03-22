@@ -35,6 +35,7 @@ app.use(cookieParser());
 // Routes
 app.use('/', indexRouter);
 app.use('/users', userRouter);
+app.use('/posts', postRouter);
 
 // Server listener
 app.listen(process.env.PORT, () => {

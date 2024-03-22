@@ -36,6 +36,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/users', userRouter);
 app.use('/posts', postRouter);
+app.use('/posts/:id/comments', commentRouter);
 
 // Error handler
 app.use((err, req, res, next) => {

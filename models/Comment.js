@@ -31,8 +31,7 @@ const CommentSchema = new Schema({
   // Avatar colour accent
   avatar_colour: {
     type: String,
-    maxLength: 8,
-    default: '#FFB937',
+    maxLength: 7,
   },
 });
 

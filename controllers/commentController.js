@@ -19,3 +19,54 @@ exports.get_all_comments = asyncHandler(async (req, res, next) => {
   // Return all comments otherwise
   return res.json(allComments);
 });
+
+exports.create_comment = [
+  // Validate and sanitise comment form fields
+  body(
+    'author',
+    'Comment author field must contain between 3 and 64 characters.'
+  )
+    .trim()
+    .isLength({ min: 3, max: 64 }),
+
+  body('content', 'Comment content field must contain at least 3 characters.')
+    .trim()
+    .isLength({ min: 3 }),
+
+  body(
+    'avatar_colour',
+    'Comment avatar colour field must contain 7 characters at the maximum and be a hex colour.'
+  )
+    .trim()
+    .isLength({ max: 7 }),
+
+  asyncHandler(async (req, res, next) => {
+    // Extract validation errors from a request
+    const errors = validationResult(req);
+
+    const defaultColour = '#FFB937';
+    const postId = req.params.id;
+    const author = req.body.author;
+    const content = req.body.content;
+    const avatarColour = req.body.avatar_colour || defaultColour;
+
+    // Create new comment
+    const comment = new Comment({
+      post: postId,
+      author: author,
+      content: content,
+      avatar_colour: avatarColour,
+    });
+
+    // Return error(s) if something is wrong
+    if (!errors.isEmpty()) {
+      return res.status(400).json(errors.array());
+    } else {
+      // Save comment and return success message
+      await comment.save();
+      return res.json({
+        message: 'Comment created successfully.',
+      });
+    }
+  }),
+];

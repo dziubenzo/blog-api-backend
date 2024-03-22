@@ -9,6 +9,12 @@ router.get('/', postController.get_all_posts);
 // POST create post
 router.post('/', postController.create_post);
 
+// PUT publish all unpublished posts
+router.put('/publish-all', postController.publish_all_posts);
+
+// // PUT unpublish all published posts
+// router.put('/unpublish-all', postController.unpublish_all_posts);
+
 // GET get post
 router.get('/:id', postController.get_post);
 

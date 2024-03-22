@@ -11,10 +11,11 @@ exports.get_all_posts = asyncHandler(async (req, res, next) => {
   const allPosts = await Post.find({}).sort({ create_date: -1 }).exec();
   // Send error message if no posts
   if (!allPosts.length) {
-    return res.json({
+    return res.status(404).json({
       error: 'No posts to show.',
     });
   }
+  // Return all posts otherwise
   return res.json(allPosts);
 });
 
@@ -78,6 +79,24 @@ exports.create_post = [
     }
   }),
 ];
+
+exports.publish_all_posts = asyncHandler(async (req, res, next) => {
+  // Update all unpublished posts to published
+  const result = await Post.updateMany(
+    { published: false },
+    { published: true }
+  );
+  // Return error message if no documents were updated
+  if (result.modifiedCount === 0) {
+    return res.status(400).json({
+      error: 'Found no documents to update.',
+    });
+  }
+  // Return success message otherwise
+  return res.json({
+    message: `${result.modifiedCount} was/were published successfully.`,
+  });
+});
 
 exports.get_post = [
   checkIdParameter,
@@ -162,7 +181,7 @@ exports.delete_post = [
     const deletedPost = await Post.findByIdAndDelete(postId);
     if (!deletedPost) {
       return res.status(404).json({
-        message: 'No post to delete.',
+        error: 'No post to delete.',
       });
     }
     return res.json({
@@ -192,7 +211,7 @@ exports.unlike_post = [
     // Return error if there are no likes
     if (likes === 0) {
       return res.status(400).json({
-        message: 'Post has no likes.',
+        error: 'Post has no likes.',
       });
     }
     // Subtract a like from the post and return success message

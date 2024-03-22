@@ -4,6 +4,7 @@ const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 const slugify = require('slugify');
+const isValidObjectId = require('mongoose').isValidObjectId;
 
 exports.get_all_posts = asyncHandler(async (req, res, next) => {
   // Get all posts from DB
@@ -78,3 +79,26 @@ exports.create_post = [
     }
   }),
 ];
+
+exports.get_post = asyncHandler(async (req, res, next) => {
+  // Get id from path parameter
+  const postId = req.params.id;
+
+  // Return error if path parameter is not a valid ObjectId
+  if (!isValidObjectId(postId)) {
+    return res.status(400).json({
+      error: 'Invalid path parameter.',
+    });
+  }
+  // Get post from DB
+  const post = await Post.findOne({ _id: postId });
+
+  // Return error if post not found
+  if (!post) {
+    return res.status(400).json({
+      error: 'Post not found.',
+    });
+  }
+  // Return post otherwise
+  return res.json(post);
+});

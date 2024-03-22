@@ -9,8 +9,8 @@ router.get('/', postController.get_all_posts);
 // POST create post
 router.post('/', postController.create_post);
 
-// // GET get post
-// router.get('/:id', postController.get_post);
+// GET get post
+router.get('/:id', postController.get_post);
 
 // // PUT edit post
 // router.put('/:id', postController.edit_post);

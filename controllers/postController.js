@@ -182,3 +182,23 @@ exports.like_post = [
     });
   }),
 ];
+
+exports.unlike_post = [
+  checkIdParameter,
+  asyncHandler(async (req, res, next) => {
+    const postId = req.params.id;
+    // Get post likes from DB
+    const { likes } = await Post.findOne({ _id: postId }, '-_id likes').exec();
+    // Return error if there are no likes
+    if (likes === 0) {
+      return res.status(400).json({
+        message: 'Post has no likes.',
+      });
+    }
+    // Subtract a like from the post and return success message
+    await Post.findByIdAndUpdate(postId, { $inc: { likes: -1 } });
+    return res.json({
+      message: 'Post unliked successfully.',
+    });
+  }),
+];

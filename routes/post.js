@@ -21,4 +21,7 @@ router.delete('/:id', postController.delete_post);
 // PUT like post
 router.put('/:id/like', postController.like_post);
 
+// PUT unlike post
+router.put('/:id/unlike', postController.unlike_post);
+
 module.exports = router;

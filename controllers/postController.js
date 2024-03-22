@@ -170,3 +170,15 @@ exports.delete_post = [
     });
   }),
 ];
+
+exports.like_post = [
+  checkIdParameter,
+  asyncHandler(async (req, res, next) => {
+    const postId = req.params.id;
+    // Add a like to the post and return success message
+    await Post.findByIdAndUpdate(postId, { $inc: { likes: 1 } });
+    return res.json({
+      message: 'Post liked successfully.',
+    });
+  }),
+];

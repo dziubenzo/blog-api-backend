@@ -4,7 +4,7 @@ const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 const slugify = require('slugify');
-const isValidObjectId = require('mongoose').isValidObjectId;
+const checkIdParameter = require('../config/middleware').checkIdParameter;
 
 exports.get_all_posts = asyncHandler(async (req, res, next) => {
   // Get all posts from DB
@@ -79,30 +79,28 @@ exports.create_post = [
   }),
 ];
 
-exports.get_post = asyncHandler(async (req, res, next) => {
-  // Get id from path parameter
-  const postId = req.params.id;
+exports.get_post = [
+  checkIdParameter,
+  asyncHandler(async (req, res, next) => {
+    // Get id from path parameter
+    const postId = req.params.id;
 
-  // Return error if path parameter is not a valid ObjectId
-  if (!isValidObjectId(postId)) {
-    return res.status(400).json({
-      error: 'Invalid path parameter.',
-    });
-  }
-  // Get post from DB
-  const post = await Post.findOne({ _id: postId });
+    // Get post from DB
+    const post = await Post.findOne({ _id: postId });
 
-  // Return error if post not found
-  if (!post) {
-    return res.status(400).json({
-      error: 'Post not found.',
-    });
-  }
-  // Return post otherwise
-  return res.json(post);
-});
+    // Return error if post not found
+    if (!post) {
+      return res.status(400).json({
+        error: 'Post not found.',
+      });
+    }
+    // Return post otherwise
+    return res.json(post);
+  }),
+];
 
 exports.edit_post = [
+  checkIdParameter,
   // Validate and sanitise post form fields
   body('title', 'Post title field must contain between 3 and 160 characters.')
     .trim()
@@ -133,13 +131,6 @@ exports.edit_post = [
     const author = req.body.author;
     const published = req.body.published;
 
-    // Return error if path parameter is not a valid ObjectId
-    if (!isValidObjectId(postId)) {
-      return res.status(400).json({
-        error: 'Invalid path parameter.',
-      });
-    }
-
     // Create an edited post object with updated update_date
     const editedPost = {
       title: title,
@@ -154,10 +145,28 @@ exports.edit_post = [
     if (!errors.isEmpty()) {
       return res.status(400).json(errors.array());
     } else {
+      // Update post and return success message
       await Post.findByIdAndUpdate(postId, editedPost);
       return res.json({
         message: 'Post edited successfully.',
       });
     }
+  }),
+];
+
+exports.delete_post = [
+  checkIdParameter,
+  asyncHandler(async (req, res, next) => {
+    const postId = req.params.id;
+    // Delete post and return message depending on whether or not the post was found
+    const deletedPost = await Post.findByIdAndDelete(postId);
+    if (!deletedPost) {
+      return res.status(404).json({
+        message: 'No post to delete.',
+      });
+    }
+    return res.json({
+      message: 'Post deleted successfully.',
+    });
   }),
 ];

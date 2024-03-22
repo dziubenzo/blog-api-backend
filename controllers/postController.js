@@ -8,8 +8,8 @@ const checkIdParameter = require('../config/middleware').checkIdParameter;
 
 exports.get_all_posts = asyncHandler(async (req, res, next) => {
   // Get all posts from DB
-  const allPosts = await Post.find({}).sort({ create_date: -1 }).exec();
-  // Send error message if no posts
+  const allPosts = await Post.find({}).sort({ create_date: -1 }).lean().exec();
+  // Return error message if no posts
   if (!allPosts.length) {
     return res.status(404).json({
       error: 'No posts to show.',
@@ -123,7 +123,7 @@ exports.get_post = [
     const postId = req.params.id;
 
     // Get post from DB
-    const post = await Post.findOne({ _id: postId });
+    const post = await Post.findOne({ _id: postId }).lean().exec();
 
     // Return error if post not found
     if (!post) {

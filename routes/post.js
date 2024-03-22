@@ -12,8 +12,8 @@ router.post('/', postController.create_post);
 // GET get post
 router.get('/:id', postController.get_post);
 
-// // PUT edit post
-// router.put('/:id', postController.edit_post);
+// PUT edit post
+router.put('/:id', postController.edit_post);
 
 // // DELETE delete post
 // router.delete('/:id', postController.delete_post);

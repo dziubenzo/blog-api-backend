@@ -125,3 +125,20 @@ exports.edit_comment = [
     }
   }),
 ];
+
+exports.delete_comment = [
+  checkCommentIdPath,
+  asyncHandler(async (req, res, next) => {
+    const commentId = req.params.commentId;
+    // Delete comment and return message depending on whether or not the comment was found
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
+    if (!deletedComment) {
+      return res.status(404).json({
+        error: 'No comment to delete.',
+      });
+    }
+    return res.json({
+      message: 'Comment deleted successfully.',
+    });
+  }),
+];

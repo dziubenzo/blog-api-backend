@@ -15,8 +15,8 @@ router.post('/', commentController.create_comment);
 // PUT edit post comment
 router.put('/:commentId', commentController.edit_comment);
 
-// // DELETE delete post comment
-// router.delete('/:commentId', commentController.delete_comment);
+// DELETE delete post comment
+router.delete('/:commentId', commentController.delete_comment);
 
 // // PUT like post comment
 // router.put('/:commentId/like', commentController.like_comment);

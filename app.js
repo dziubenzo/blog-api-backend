@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 // Authentication imports
 const session = require('express-session');
@@ -31,6 +32,7 @@ async function main() {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 // Routes
 app.use('/', indexRouter);

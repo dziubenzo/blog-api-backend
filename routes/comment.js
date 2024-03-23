@@ -21,7 +21,7 @@ router.delete('/:commentId', commentController.delete_comment);
 // PUT like post comment
 router.put('/:commentId/like', commentController.like_comment);
 
-// // PUT unlike post comment
-// router.put('/:commentId/unlike', commentController.unlike_comment);
+// PUT unlike post comment
+router.put('/:commentId/unlike', commentController.unlike_comment);
 
 module.exports = router;

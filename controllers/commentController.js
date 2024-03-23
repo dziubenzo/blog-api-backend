@@ -154,3 +154,26 @@ exports.like_comment = [
     });
   }),
 ];
+
+exports.unlike_comment = [
+  checkCommentIdPath,
+  asyncHandler(async (req, res, next) => {
+    const commentId = req.params.commentId;
+    // Get comment likes from DB
+    const { likes } = await Comment.findOne(
+      { _id: commentId },
+      '-_id likes'
+    ).exec();
+    // Return error if there are no likes
+    if (likes === 0) {
+      return res.status(400).json({
+        error: 'Comment has no likes.',
+      });
+    }
+    // Subtract a like from the comment and return success message
+    await Comment.findByIdAndUpdate(commentId, { $inc: { likes: -1 } });
+    return res.json({
+      message: 'Comment unliked successfully.',
+    });
+  }),
+];

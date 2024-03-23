@@ -5,7 +5,7 @@ const { body, validationResult } = require('express-validator');
 const passport = require('passport');
 const slugify = require('slugify');
 const getErrorMessages = require('../config/helpers').getErrorMessages;
-const checkIdParameter = require('../config/middleware').checkIdParameter;
+const checkPostIdPath = require('../config/middleware').checkPostIdPath;
 
 exports.get_all_posts = asyncHandler(async (req, res, next) => {
   // Get all posts from DB
@@ -119,7 +119,7 @@ exports.unpublish_all_posts = asyncHandler(async (req, res, next) => {
 });
 
 exports.get_post = [
-  checkIdParameter,
+  checkPostIdPath,
   asyncHandler(async (req, res, next) => {
     // Get id from path parameter
     const postId = req.params.id;
@@ -139,7 +139,7 @@ exports.get_post = [
 ];
 
 exports.edit_post = [
-  checkIdParameter,
+  checkPostIdPath,
   // Validate and sanitise post form fields
   body('title', 'Post title field must contain between 3 and 160 characters.')
     .trim()
@@ -195,7 +195,7 @@ exports.edit_post = [
 ];
 
 exports.delete_post = [
-  checkIdParameter,
+  checkPostIdPath,
   asyncHandler(async (req, res, next) => {
     const postId = req.params.id;
     // Delete post and return message depending on whether or not the post was found
@@ -212,7 +212,7 @@ exports.delete_post = [
 ];
 
 exports.like_post = [
-  checkIdParameter,
+  checkPostIdPath,
   asyncHandler(async (req, res, next) => {
     const postId = req.params.id;
     // Add a like to the post and return success message
@@ -224,7 +224,7 @@ exports.like_post = [
 ];
 
 exports.unlike_post = [
-  checkIdParameter,
+  checkPostIdPath,
   asyncHandler(async (req, res, next) => {
     const postId = req.params.id;
     // Get post likes from DB

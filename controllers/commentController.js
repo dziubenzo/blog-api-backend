@@ -3,6 +3,7 @@ const Comment = require('../models/Comment');
 const asyncHandler = require('express-async-handler');
 const { body, validationResult } = require('express-validator');
 const getErrorMessages = require('../config/helpers').getErrorMessages;
+const checkCommentIdPath = require('../config/middleware').checkCommentIdPath;
 
 exports.get_all_comments = asyncHandler(async (req, res, next) => {
   const postID = req.params.id;
@@ -68,6 +69,58 @@ exports.create_comment = [
       await comment.save();
       return res.json({
         message: 'Comment created successfully.',
+      });
+    }
+  }),
+];
+
+exports.edit_comment = [
+  checkCommentIdPath,
+  // Validate and sanitise comment form fields
+  body(
+    'author',
+    'Comment author field must contain between 3 and 64 characters.'
+  )
+    .trim()
+    .isLength({ min: 3, max: 64 }),
+
+  body('content', 'Comment content field must contain at least 3 characters.')
+    .trim()
+    .isLength({ min: 3 }),
+
+  body(
+    'avatar_colour',
+    'Comment avatar colour field must contain 7 characters at the maximum and be a hex colour.'
+  )
+    .trim()
+    .isLength({ max: 7 }),
+
+  asyncHandler(async (req, res, next) => {
+    // Extract validation errors from a request
+    const errors = validationResult(req);
+
+    const defaultColour = '#FFB937';
+    const commentId = req.params.commentId;
+    const author = req.body.author;
+    const content = req.body.content;
+    const avatarColour = req.body.avatar_colour || defaultColour;
+
+    // Create an edited comment object
+    const editedComment = {
+      author: author,
+      content: content,
+      avatar_colour: avatarColour,
+    };
+
+    // Return error message(s) if something is wrong
+    if (!errors.isEmpty()) {
+      const errorMsgs = getErrorMessages(errors);
+      return res.status(400).json(errorMsgs);
+    } else {
+      // Update comment and return success message
+      await Comment.findByIdAndUpdate(commentId, editedComment);
+      return res.json({
+        message: 'Comment edited successfully.',
       });
     }
   }),

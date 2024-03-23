@@ -142,3 +142,15 @@ exports.delete_comment = [
     });
   }),
 ];
+
+exports.like_comment = [
+  checkCommentIdPath,
+  asyncHandler(async (req, res, next) => {
+    const commentId = req.params.commentId;
+    // Add a like to the comment and return success message
+    await Comment.findByIdAndUpdate(commentId, { $inc: { likes: 1 } });
+    return res.json({
+      message: 'Comment liked successfully.',
+    });
+  }),
+];

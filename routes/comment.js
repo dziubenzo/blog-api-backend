@@ -6,11 +6,14 @@ const checkPostIdPath = require('../config/middleware').checkPostIdPath;
 
 router.use(checkPostIdPath);
 
-// GET get all post comments
-router.get('/', commentController.get_all_comments);
+// GET get post comments
+router.get('/', commentController.get_post_comments);
 
 // POST create post comment
 router.post('/', commentController.create_comment);
+
+// GET get all comments
+router.get('/all', commentController.get_all_comments);
 
 // PUT edit post comment
 router.put('/:commentId', commentController.edit_comment);

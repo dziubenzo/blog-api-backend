@@ -5,21 +5,21 @@ const { body, validationResult } = require('express-validator');
 const getErrorMessages = require('../config/helpers').getErrorMessages;
 const checkCommentIdPath = require('../config/middleware').checkCommentIdPath;
 
-exports.get_all_comments = asyncHandler(async (req, res, next) => {
+exports.get_post_comments = asyncHandler(async (req, res, next) => {
   const postID = req.params.id;
-  // Get all post comments from DB
-  const allComments = await Comment.find({ post: postID })
+  // Get post comments from DB
+  const postComments = await Comment.find({ post: postID })
     .sort({ create_date: -1 })
     .lean()
     .exec();
   // Return error message if no posts
-  if (!allComments.length) {
+  if (!postComments.length) {
     return res.status(404).json({
       error: 'No comments to show.',
     });
   }
-  // Return all comments otherwise
-  return res.json(allComments);
+  // Return post comments otherwise
+  return res.json(postComments);
 });
 
 exports.create_comment = [
@@ -73,6 +73,22 @@ exports.create_comment = [
     }
   }),
 ];
+
+exports.get_all_comments = asyncHandler(async (req, res, next) => {
+  // Get all comments from DB
+  const allComments = await Comment.find()
+    .sort({ create_date: -1 })
+    .lean()
+    .exec();
+  // Return error message if no posts
+  if (!allComments.length) {
+    return res.status(404).json({
+      error: 'No comments in the DB.',
+    });
+  }
+  // Return all comments otherwise
+  return res.json(allComments);
+});
 
 exports.edit_comment = [
   checkCommentIdPath,

@@ -33,7 +33,7 @@ exports.create_comment = [
 
   body('content', 'Comment content field must contain at least 3 characters.')
     .trim()
-    .isLength({ min: 3 }),
+    .isLength({ min: 3, max: 320 }),
 
   body(
     'avatar_colour',
@@ -66,11 +66,9 @@ exports.create_comment = [
       const errorMsgs = getErrorMessages(errors);
       return res.status(400).json(errorMsgs);
     } else {
-      // Save comment and return success message
+      // Save comment and return it
       await comment.save();
-      return res.json({
-        message: 'Comment created successfully.',
-      });
+      return res.json(comment);
     }
   }),
 ];

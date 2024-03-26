@@ -18,10 +18,11 @@ const CommentSchema = new Schema({
     type: String,
     required: true,
     minLength: 3,
+    maxLength: 320,
   },
   create_date: {
     type: Date,
-    default: Date.now(),
+    required: true,
   },
   likes: {
     type: Number,

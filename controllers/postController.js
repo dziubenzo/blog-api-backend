@@ -55,6 +55,8 @@ exports.create_post = [
       title: title,
       content: content,
       author: author,
+      create_date: Date.now(),
+      update_date: Date.now(),
       published: published,
       slug: slugify(title, { lower: true }),
     });

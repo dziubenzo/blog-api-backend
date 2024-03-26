@@ -23,11 +23,11 @@ const PostSchema = new Schema({
   },
   create_date: {
     type: Date,
-    default: Date.now(),
+    required: true,
   },
   update_date: {
     type: Date,
-    default: Date.now(),
+    required: true,
   },
   published: {
     type: Boolean,

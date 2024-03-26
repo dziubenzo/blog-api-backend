@@ -57,6 +57,7 @@ exports.create_comment = [
       post: postId,
       author: author,
       content: content,
+      create_date: Date.now(),
       avatar_colour: avatarColour,
     });
 

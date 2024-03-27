@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
+const passport = require('passport');
 
 const commentController = require('../controllers/commentController');
 const checkPostIdPath = require('../config/middleware').checkPostIdPath;
@@ -16,10 +17,16 @@ router.post('/', commentController.create_comment);
 router.get('/all', commentController.get_all_comments);
 
 // PUT edit post comment
-router.put('/:commentId', commentController.edit_comment);
+router.put('/:commentId', [
+  passport.authenticate('jwt', { session: false }),
+  commentController.edit_comment,
+]);
 
 // DELETE delete post comment
-router.delete('/:commentId', commentController.delete_comment);
+router.delete('/:commentId', [
+  passport.authenticate('jwt', { session: false }),
+  commentController.delete_comment,
+]);
 
 // PUT like post comment
 router.put('/:commentId/like', commentController.like_comment);

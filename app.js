@@ -4,8 +4,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 // Authentication imports
-const session = require('express-session');
 const passport = require('passport');
+const jwtStrategy = require('./config/passport').jwtStrategy;
 
 // Route imports
 const indexRouter = require('./routes/index');
@@ -33,6 +33,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+
+// JWT authentication
+passport.use(jwtStrategy);
 
 // Routes
 app.use('/', indexRouter);

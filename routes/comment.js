@@ -16,6 +16,12 @@ router.post('/', commentController.create_comment);
 // GET get all comments
 router.get('/all', commentController.get_all_comments);
 
+// GET get post comment
+router.get('/:commentId', [
+  passport.authenticate('jwt', { session: false }),
+  commentController.get_comment,
+]);
+
 // PUT edit post comment
 router.put('/:commentId', [
   passport.authenticate('jwt', { session: false }),

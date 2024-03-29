@@ -79,7 +79,7 @@ exports.get_all_comments = asyncHandler(async (req, res, next) => {
     .sort({ create_date: -1 })
     .lean()
     .exec();
-  // Return error message if no posts
+  // Return error message if no comments
   if (!allComments.length) {
     return res.status(404).json({
       error: 'No comments in the DB.',
@@ -87,6 +87,20 @@ exports.get_all_comments = asyncHandler(async (req, res, next) => {
   }
   // Return all comments otherwise
   return res.json(allComments);
+});
+
+exports.get_comment = asyncHandler(async (req, res, next) => {
+  // Get post comment from DB
+  const commentId = req.params.commentId;
+  const comment = await Comment.findOne({ _id: commentId }).lean().exec();
+  // Return error message if no comment
+  if (!comment) {
+    return res.status(404).json({
+      error: 'No comment in the DB.',
+    });
+  }
+  // Return comment otherwise
+  return res.json(comment);
 });
 
 exports.edit_comment = [

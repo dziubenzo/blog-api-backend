@@ -2,6 +2,8 @@ const express = require('express');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const compression = require("compression");
+const helmet = require("helmet");
 
 // Authentication imports
 const passport = require('passport');
@@ -28,11 +30,21 @@ async function main() {
   await mongoose.connect(mongoDB);
 }
 
+// Rate limiter: maximum of forty requests per minute
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 40,
+});
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+app.use(compression());
+app.use(helmet());
+app.use(limiter);
 
 // JWT authentication
 passport.use(jwtStrategy);

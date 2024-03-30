@@ -39,7 +39,10 @@ const limiter = RateLimit({
 
 // CORS options - allowed sites
 const corsOptions = {
-  origin: 'https://dziubenzo-blog-api-client.netlify.app',
+  origin: [
+    'https://dziubenzo-blog-api-client.netlify.app',
+    'https://dziubenzo-blog-api-admin.netlify.app',
+  ],
 };
 
 // Middleware

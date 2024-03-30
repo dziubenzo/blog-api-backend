@@ -42,7 +42,7 @@ exports.log_in = [
         token,
       });
     }
-    // // Otherwise return error message
+    // Otherwise return error message
     return res.status(401).json({ error: 'Authentication failed...' });
   }),
 ];
